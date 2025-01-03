@@ -37,3 +37,8 @@ export interface WeatherData {
     windSpeed: number;
   };
 }
+
+export enum TemperatureUnit {
+  Celsius = 'celsius',
+  Fahrenheit = 'fahrenheit'
+}

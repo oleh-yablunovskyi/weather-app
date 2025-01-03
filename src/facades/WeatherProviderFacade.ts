@@ -1,6 +1,6 @@
 import { OpenWeatherMapFactory } from "../providers/openweathermap/OpenWeatherMapFactory.js";
 import { TomorrowIOFactory } from "../providers/tomorrowio/TomorrowIOFactory.js";
-import { WeatherData } from "../types/index.js";
+import { WeatherData, TemperatureUnit } from "../types/index.js";
 
 export class WeatherProviderFacade {
   private readonly factories = {
@@ -8,7 +8,14 @@ export class WeatherProviderFacade {
     TomorrowIO: new TomorrowIOFactory()
   };
 
-  public async getWeatherFromAllProviders(city: string): Promise<WeatherData[]> {
+  private convertCelsiusToFahrenheit(celsius: number): number {
+    return (celsius * 9) / 5 + 32;
+  }
+
+  public async getWeatherFromAllProviders(
+    city: string, 
+    tempUnit: TemperatureUnit = TemperatureUnit.Celsius,
+  ): Promise<WeatherData[]> {
     const allFactories = Object.values(this.factories);
 
     const weatherPromises = allFactories.map((factory) => {
@@ -17,6 +24,15 @@ export class WeatherProviderFacade {
     });
 
     const results = await Promise.all(weatherPromises);
+
+    if (tempUnit === TemperatureUnit.Fahrenheit) {
+      return results.map((weatherData) => {
+        weatherData.data.temperature = this.convertCelsiusToFahrenheit(
+          weatherData.data.temperature
+        );
+        return weatherData;
+      });
+    }
 
     return results;
   }
