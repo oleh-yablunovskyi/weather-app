@@ -8,7 +8,7 @@ const main = async () => {
   try {
     const city = getCity();
     const weatherService = WeatherService.getInstance();
-    const weatherData = await weatherService.getAllWeatherData(city);
+    const weatherData = await weatherService.getWeather(city);
     console.log(JSON.stringify(weatherData, null, 2));
   } catch (error) {
     console.error('Error:', error instanceof Error ? error.message : 'Unknown error occurred');
