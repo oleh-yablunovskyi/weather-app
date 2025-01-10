@@ -2,7 +2,7 @@ import { OpenWeatherMapFactory } from "../providers/openweathermap/OpenWeatherMa
 import { TomorrowIOFactory } from "../providers/tomorrowio/TomorrowIOFactory.js";
 import { WeatherData, TemperatureUnit } from "../types/index.js";
 
-export class WeatherProviderFacade {
+export class WeatherAggregator {
   private readonly factories = {
     OpenWeatherMap: new OpenWeatherMapFactory(),
     TomorrowIO: new TomorrowIOFactory()

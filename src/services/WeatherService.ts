@@ -1,12 +1,12 @@
-import { WeatherProviderFacade } from "../facades/WeatherProviderFacade.js";
+import { WeatherAggregator } from "../core/WeatherAggregator.js";
 import { WeatherData, TemperatureUnit } from "../types/index.js";
 
 export class WeatherService {
   private static instance: WeatherService;
-  private readonly weatherAggregator: WeatherProviderFacade;
+  private readonly weatherAggregator: WeatherAggregator;
 
   private constructor() {
-    this.weatherAggregator = new WeatherProviderFacade();
+    this.weatherAggregator = new WeatherAggregator();
   }
 
   public static getInstance(): WeatherService {
