@@ -48,7 +48,7 @@ export class TomorrowIOProvider extends WeatherProvider {
     const currentData = weatherData.timelines.minutely[0].values;
 
     return {
-      provider: this.getProviderName(),
+      providerName: this.getProviderName(),
       data: {
         weatherOverview: this.weatherCodeMapping[currentData.weatherCode] || "Unknown",
         temperature: currentData.temperature,

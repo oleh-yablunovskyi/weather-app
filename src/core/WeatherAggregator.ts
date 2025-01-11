@@ -1,6 +1,6 @@
 import { OpenWeatherMapFactory } from "../providers/openweathermap/OpenWeatherMapFactory.js";
 import { TomorrowIOFactory } from "../providers/tomorrowio/TomorrowIOFactory.js";
-import { WeatherData, TemperatureUnit } from "../types/index.js";
+import { WeatherReport, TemperatureUnit } from "../types/index.js";
 
 export class WeatherAggregator {
   private readonly factories = {
@@ -15,25 +15,25 @@ export class WeatherAggregator {
   public async getWeatherFromAllProviders(
     city: string, 
     tempUnit: TemperatureUnit = TemperatureUnit.Celsius,
-  ): Promise<WeatherData[]> {
-    const allFactories = Object.values(this.factories);
+  ): Promise<WeatherReport[]> {
+    const weatherProviders = Object.values(this.factories).map((factory) => factory.createWeatherProvider());
 
-    const weatherPromises = allFactories.map((factory) => {
-      const provider = factory.createWeatherProvider();
-      return provider.getWeather(city);
-    });
-
-    const results = await Promise.all(weatherPromises);
+    const weatherResults = await Promise.all(
+      weatherProviders.map((provider) => provider.getWeather(city))
+    );
 
     if (tempUnit === TemperatureUnit.Fahrenheit) {
-      return results.map((weatherData) => {
-        weatherData.data.temperature = this.convertCelsiusToFahrenheit(
-          weatherData.data.temperature
-        );
-        return weatherData;
+      weatherResults.forEach((weatherData) => {
+        weatherData.data.temperature = this.convertCelsiusToFahrenheit(weatherData.data.temperature);
       });
     }
 
-    return results;
+    return weatherResults.map((weatherData) => ({
+      provider: weatherData.providerName,
+      weatherOverview: weatherData.data.weatherOverview,
+      temperature: weatherData.data.temperature,
+      humidity: weatherData.data.humidity,
+      windSpeed: weatherData.data.windSpeed,
+    }));
   }
 }

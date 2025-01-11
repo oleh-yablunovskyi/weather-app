@@ -1,5 +1,5 @@
 import { WeatherAggregator } from "../core/WeatherAggregator.js";
-import { WeatherData, TemperatureUnit } from "../types/index.js";
+import { WeatherReport, TemperatureUnit } from "../types/index.js";
 
 export class WeatherService {
   private static instance: WeatherService;
@@ -16,7 +16,7 @@ export class WeatherService {
     return WeatherService.instance;
   }
 
-  public async getWeather(city: string): Promise<WeatherData[]> {
+  public async getWeather(city: string): Promise<WeatherReport[]> {
     return this.weatherAggregator.getWeatherFromAllProviders(city, TemperatureUnit.Fahrenheit);
   }
 }

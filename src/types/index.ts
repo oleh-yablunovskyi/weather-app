@@ -29,13 +29,21 @@ export interface TomorrowIOResponse {
 }
 
 export interface WeatherData {
-  provider: string;
+  providerName: string;
   data: {
     weatherOverview: string;
     temperature: number;
     humidity: number;
     windSpeed: number;
   };
+}
+
+export interface WeatherReport {
+  provider: string;
+  weatherOverview: string;
+  temperature: number;
+  humidity: number;
+  windSpeed: number;
 }
 
 export enum TemperatureUnit {

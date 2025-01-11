@@ -21,7 +21,7 @@ export class OpenWeatherMapProvider extends WeatherProvider {
     const weatherData = await response.json() as OpenWeatherMapResponse;
 
     return {
-      provider: this.getProviderName(),
+      providerName: this.getProviderName(),
       data: {
         weatherOverview: weatherData.weather[0].main,
         temperature: weatherData.main.temp,
