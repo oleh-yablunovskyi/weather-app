@@ -4,8 +4,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "tsx src/index.ts",
-    "start": "tsc & node dist/index.js"
+    "dev": "tsx src/main.ts",
+    "start": "tsc & node dist/main.js"
   },
   "keywords": [],
   "author": "",
