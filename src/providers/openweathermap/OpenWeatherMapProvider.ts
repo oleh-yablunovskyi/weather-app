@@ -4,12 +4,11 @@ import { OpenWeatherMapResponse, WeatherData } from "../../types/index.js";
 export class OpenWeatherMapProvider extends WeatherProvider {
   private readonly apiKey: string;
 
-  constructor() {
+  constructor(apiKey: string) {
     super();
 
-    const apiKey = process.env.OPENWEATHER_API_KEY;
     if (!apiKey) {
-      throw new Error('OpenWeatherMap API key is missing in .env file');
+      throw new Error('OpenWeatherMap API key is missing');
     }
     this.apiKey = apiKey;
   }

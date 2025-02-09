@@ -11,9 +11,9 @@ const main = async () => {
   try {
     const city = getCity();
 
-    // Instantiate providers
-    const openWeatherProvider = new OpenWeatherMapFactory().createWeatherProvider();
-    const tomorrowIOProvider = new TomorrowIOFactory().createWeatherProvider();
+    // Instantiate providers with API keys
+    const openWeatherProvider = new OpenWeatherMapFactory(process.env.OPENWEATHER_API_KEY || '').createWeatherProvider();
+    const tomorrowIOProvider = new TomorrowIOFactory(process.env.TOMORROW_IO_API_KEY || '').createWeatherProvider();
 
     // Inject providers into aggregator
     const weatherAggregator = new WeatherAggregator([
