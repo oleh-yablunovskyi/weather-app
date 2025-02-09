@@ -3,10 +3,10 @@ import { TomorrowIOFactory } from "../providers/tomorrowio/TomorrowIOFactory.js"
 import { WeatherReport, TemperatureUnit } from "../types/index.js";
 
 export class WeatherAggregator {
-  private readonly factories = {
-    OpenWeatherMap: new OpenWeatherMapFactory(),
-    TomorrowIO: new TomorrowIOFactory()
-  };
+  private readonly providers = [
+    new OpenWeatherMapFactory().createWeatherProvider(),
+    new TomorrowIOFactory().createWeatherProvider()
+  ];
 
   private convertCelsiusToFahrenheit(celsius: number): number {
     return (celsius * 9) / 5 + 32;
@@ -16,10 +16,8 @@ export class WeatherAggregator {
     city: string, 
     tempUnit: TemperatureUnit = TemperatureUnit.Celsius,
   ): Promise<WeatherReport[]> {
-    const weatherProviders = Object.values(this.factories).map((factory) => factory.createWeatherProvider());
-
     const weatherResults = await Promise.all(
-      weatherProviders.map((provider) => provider.getWeather(city))
+      this.providers.map((provider) => provider.getWeather(city))
     );
 
     if (tempUnit === TemperatureUnit.Fahrenheit) {
