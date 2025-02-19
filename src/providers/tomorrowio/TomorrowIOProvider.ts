@@ -30,12 +30,11 @@ export class TomorrowIOProvider extends WeatherProvider {
     "8000": "Thunderstorm"
   };
 
-  constructor() {
+  constructor(apiKey: string) {
     super();
 
-    const apiKey = process.env.TOMORROW_IO_API_KEY;
     if (!apiKey) {
-      throw new Error('Tomorrow.io API key is missing in .env file');
+      throw new Error('Tomorrow.io API key is missing');
     }
     this.apiKey = apiKey;
   }

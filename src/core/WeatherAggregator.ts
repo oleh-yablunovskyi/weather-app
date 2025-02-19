@@ -1,12 +1,8 @@
-import { OpenWeatherMapFactory } from "../providers/openweathermap/OpenWeatherMapFactory.js";
-import { TomorrowIOFactory } from "../providers/tomorrowio/TomorrowIOFactory.js";
+import { WeatherProvider } from "../providers/WeatherProvider.js";
 import { WeatherReport, TemperatureUnit } from "../types/index.js";
 
 export class WeatherAggregator {
-  private readonly providers = [
-    new OpenWeatherMapFactory().createWeatherProvider(),
-    new TomorrowIOFactory().createWeatherProvider()
-  ];
+  constructor(private readonly providers: WeatherProvider[]) {}
 
   private convertCelsiusToFahrenheit(celsius: number): number {
     return (celsius * 9) / 5 + 32;
