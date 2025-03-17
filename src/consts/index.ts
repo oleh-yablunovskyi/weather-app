@@ -1,0 +1,1 @@
+export const CACHE_TTL_TIME_IN_SEC = 60;
