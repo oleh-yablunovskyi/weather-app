@@ -3,7 +3,8 @@ import { WeatherService } from './services/WeatherService.js';
 import { WeatherAggregator } from './core/WeatherAggregator.js';
 import { OpenWeatherMapFactory } from './providers/openweathermap/OpenWeatherMapFactory.js';
 import { TomorrowIOFactory } from './providers/tomorrowio/TomorrowIOFactory.js';
-import redisClient, { initializeRedis } from './utils/redisClient.js';
+import redisClient, { initializeRedis } from './cache/redis/redisClient.js';
+import { RedisCacheService } from './cache/redis/RedisCacheService.js';
 import { getCity } from './utils/getCity.js';
 
 dotenv.config();
@@ -24,8 +25,9 @@ const main = async () => {
       tomorrowIOProvider,
     ]);
 
-    // Inject aggregator into service
-    const weatherService = new WeatherService(weatherAggregator);
+    const cacheService = new RedisCacheService();
+
+    const weatherService = new WeatherService(weatherAggregator, cacheService);
 
     const weatherData = await weatherService.getWeather(city);
     console.log(JSON.stringify(weatherData, null, 2));

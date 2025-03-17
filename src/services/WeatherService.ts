@@ -1,18 +1,21 @@
 import { WeatherAggregator } from "../core/WeatherAggregator.js";
+import { CacheService } from "../cache/CacheService.js";
 import { WeatherReport, TemperatureUnit } from "../types/index.js";
-import redisClient from '../utils/redisClient.js';
+import { CACHE_TTL_TIME_IN_SEC } from "../consts/index.js";
 
 export class WeatherService {
-  constructor(private readonly weatherAggregator: WeatherAggregator) {}
+  constructor(
+    private readonly weatherAggregator: WeatherAggregator,
+    private readonly cacheService: CacheService
+  ) {}
 
   public async getWeather(city: string): Promise<WeatherReport[]> {
     const cacheKey = `weather:${city.toLowerCase()}`;
 
-    // Check if the cache contains data for this city
-    const cachedData = await redisClient.get(cacheKey);
+    const cachedData = await this.cacheService.get<WeatherReport[]>(cacheKey);
     if (cachedData) {
       console.log(`Cache hit for ${city}`);
-      return JSON.parse(cachedData);
+      return cachedData;
     }
 
     console.log(`Cache miss for ${city}, fetching from providers...`);
@@ -22,10 +25,7 @@ export class WeatherService {
       TemperatureUnit.Fahrenheit,
     );
 
-    // Store the result in Redis with a TTL of 60 seconds
-    await redisClient.set(cacheKey, JSON.stringify(weatherData), {
-      EX: 60,
-    });
+    await this.cacheService.set(cacheKey, weatherData, CACHE_TTL_TIME_IN_SEC);
 
     return weatherData;
   }
