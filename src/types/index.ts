@@ -29,16 +29,14 @@ export interface TomorrowIOResponse {
 }
 
 export interface WeatherData {
-  providerName: string;
-  data: {
-    weatherOverview: string;
-    temperature: number;
-    humidity: number;
-    windSpeed: number;
-  };
+  weatherOverview: string;
+  temperature: number;
+  humidity: number;
+  windSpeed: number;
 }
 
 export interface WeatherReport {
+  location: string;
   provider: string;
   weatherOverview: string;
   temperature: number;

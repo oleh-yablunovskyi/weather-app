@@ -22,7 +22,7 @@ export class WeatherService {
 
     const weatherData = await this.weatherAggregator.getWeatherFromAllProviders(
       city,
-      TemperatureUnit.Fahrenheit,
+      TemperatureUnit.Celsius,
     );
 
     await this.cacheService.set(cacheKey, weatherData, CACHE_TTL_TIME_IN_SEC);

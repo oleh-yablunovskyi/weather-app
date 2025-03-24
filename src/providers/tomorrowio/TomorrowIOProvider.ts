@@ -47,13 +47,10 @@ export class TomorrowIOProvider extends WeatherProvider {
     const currentData = weatherData.timelines.minutely[0].values;
 
     return {
-      providerName: this.getProviderName(),
-      data: {
-        weatherOverview: this.weatherCodeMapping[currentData.weatherCode] || "Unknown",
-        temperature: currentData.temperature,
-        humidity: currentData.humidity,
-        windSpeed: currentData.windSpeed,
-      }
+      weatherOverview: this.weatherCodeMapping[currentData.weatherCode] || "Unknown",
+      temperature: currentData.temperature,
+      humidity: currentData.humidity,
+      windSpeed: currentData.windSpeed,
     };
   }
 

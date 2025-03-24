@@ -13,21 +13,27 @@ export class WeatherAggregator {
     tempUnit: TemperatureUnit = TemperatureUnit.Celsius,
   ): Promise<WeatherReport[]> {
     const weatherResults = await Promise.all(
-      this.providers.map((provider) => provider.getWeather(city))
+      this.providers.map(async (provider) => {
+        const data = await provider.getWeather(city);
+        const providerName = provider.getProviderName();
+        const temperature =
+          tempUnit === TemperatureUnit.Fahrenheit
+            ? this.convertCelsiusToFahrenheit(data.temperature)
+            : data.temperature;
+
+        const weatherReport: WeatherReport = {
+          location: city,
+          provider: providerName,
+          weatherOverview: data.weatherOverview,
+          temperature,
+          humidity: data.humidity,
+          windSpeed: data.windSpeed,
+        };
+
+        return weatherReport;
+      })
     );
-
-    if (tempUnit === TemperatureUnit.Fahrenheit) {
-      weatherResults.forEach((weatherData) => {
-        weatherData.data.temperature = this.convertCelsiusToFahrenheit(weatherData.data.temperature);
-      });
-    }
-
-    return weatherResults.map((weatherData) => ({
-      provider: weatherData.providerName,
-      weatherOverview: weatherData.data.weatherOverview,
-      temperature: weatherData.data.temperature,
-      humidity: weatherData.data.humidity,
-      windSpeed: weatherData.data.windSpeed,
-    }));
+  
+    return weatherResults;
   }
 }
