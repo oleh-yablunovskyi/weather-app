@@ -1,39 +1,50 @@
 import { WeatherProvider } from "../providers/WeatherProvider.js";
-import { WeatherReport, TemperatureUnit } from "../types/index.js";
+import { WeatherReport, TemperatureUnit, WeatherData } from "../types/index.js";
 
 export class WeatherAggregator {
   constructor(private readonly providers: WeatherProvider[]) {}
 
-  private convertCelsiusToFahrenheit(celsius: number): number {
-    return (celsius * 9) / 5 + 32;
-  }
-
-  public async getWeatherFromAllProviders(
+  public async getAggregatedWeather(
     city: string, 
     tempUnit: TemperatureUnit = TemperatureUnit.Celsius,
   ): Promise<WeatherReport[]> {
-    const weatherResults = await Promise.all(
+    const weatherData = await this.fetchWeatherFromAllProviders(city);
+
+    return weatherData.map(({ providerName, data }) =>
+      this.createWeatherReport(city, tempUnit, providerName, data)
+    );
+  }
+
+  private async fetchWeatherFromAllProviders(city: string): Promise<{ providerName: string; data: WeatherData }[]> {
+    return Promise.all(
       this.providers.map(async (provider) => {
-        const data = await provider.getWeather(city);
         const providerName = provider.getProviderName();
-        const temperature =
-          tempUnit === TemperatureUnit.Fahrenheit
-            ? this.convertCelsiusToFahrenheit(data.temperature)
-            : data.temperature;
-
-        const weatherReport: WeatherReport = {
-          location: city,
-          provider: providerName,
-          weatherOverview: data.weatherOverview,
-          temperature,
-          humidity: data.humidity,
-          windSpeed: data.windSpeed,
-        };
-
-        return weatherReport;
+        const data = await provider.getWeather(city);
+        return { providerName, data };
       })
     );
-  
-    return weatherResults;
+  }
+
+  private createWeatherReport(
+    city: string,
+    tempUnit: TemperatureUnit,
+    providerName: string,
+    data: WeatherData,
+  ): WeatherReport {
+    return {
+      location: city,
+      provider: providerName,
+      weatherOverview: data.weatherOverview,
+      temperature:
+        tempUnit === TemperatureUnit.Fahrenheit
+          ? this.convertCelsiusToFahrenheit(data.temperature)
+          : data.temperature,
+      humidity: data.humidity,
+      windSpeed: data.windSpeed,
+    };
+  }
+
+  private convertCelsiusToFahrenheit(celsius: number): number {
+    return (celsius * 9) / 5 + 32;
   }
 }

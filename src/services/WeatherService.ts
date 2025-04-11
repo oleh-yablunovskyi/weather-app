@@ -20,7 +20,7 @@ export class WeatherService {
 
     console.log(`Cache miss for ${city}, fetching from providers...`);
 
-    const weatherData = await this.weatherAggregator.getWeatherFromAllProviders(
+    const weatherData = await this.weatherAggregator.getAggregatedWeather(
       city,
       TemperatureUnit.Celsius,
     );
