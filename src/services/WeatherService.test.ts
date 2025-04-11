@@ -35,7 +35,7 @@ describe('WeatherService', () => {
 
   beforeEach(() => {
     weatherAggregator = {
-      getWeatherFromAllProviders: vi.fn().mockResolvedValue(mockWeatherReports),
+      getAggregatedWeather: vi.fn().mockResolvedValue(mockWeatherReports),
     } as unknown as WeatherAggregator;
 
     cacheService = {
@@ -50,7 +50,7 @@ describe('WeatherService', () => {
     const results = await weatherService.getWeather(city);
 
     expect(cacheService.get).toHaveBeenCalledWith(cacheKey);
-    expect(weatherAggregator.getWeatherFromAllProviders).toHaveBeenCalledWith(
+    expect(weatherAggregator.getAggregatedWeather).toHaveBeenCalledWith(
       city,
       TemperatureUnit.Celsius
     );
@@ -68,20 +68,20 @@ describe('WeatherService', () => {
     const results = await weatherService.getWeather(city);
   
     expect(cacheService.get).toHaveBeenCalledWith(cacheKey);
-    expect(weatherAggregator.getWeatherFromAllProviders).not.toHaveBeenCalled();
+    expect(weatherAggregator.getAggregatedWeather).not.toHaveBeenCalled();
     expect(cacheService.set).not.toHaveBeenCalled();
     expect(results).toEqual(mockWeatherReports);
   });
   
   it('should correctly handle aggregator errors on cache miss', async () => {
-    vi.mocked(weatherAggregator.getWeatherFromAllProviders).mockRejectedValue(
+    vi.mocked(weatherAggregator.getAggregatedWeather).mockRejectedValue(
       new Error('Aggregator failed')
     );
   
     await expect(weatherService.getWeather(city)).rejects.toThrow('Aggregator failed');
   
     expect(cacheService.get).toHaveBeenCalledWith(cacheKey);
-    expect(weatherAggregator.getWeatherFromAllProviders).toHaveBeenCalled();
+    expect(weatherAggregator.getAggregatedWeather).toHaveBeenCalled();
     expect(cacheService.set).not.toHaveBeenCalled();
   });
 });

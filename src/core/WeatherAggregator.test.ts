@@ -40,7 +40,7 @@ describe('WeatherAggregator', () => {
 
   it('should retrieve weather from all providers', async () => {
     const city = 'Kyiv';
-    const reports = await weatherAggregator.getWeatherFromAllProviders(city);
+    const reports = await weatherAggregator.getAggregatedWeather(city);
 
     expect(reports).toEqual([
       {
@@ -64,7 +64,7 @@ describe('WeatherAggregator', () => {
 
   it('should correctly convert temperature to Fahrenheit', async () => {
     const city = 'Vilnius';
-    const reports = await weatherAggregator.getWeatherFromAllProviders(city, TemperatureUnit.Fahrenheit);
+    const reports = await weatherAggregator.getAggregatedWeather(city, TemperatureUnit.Fahrenheit);
 
     expect(reports).toEqual([
       {
