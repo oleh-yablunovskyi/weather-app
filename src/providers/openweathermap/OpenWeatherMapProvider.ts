@@ -20,13 +20,10 @@ export class OpenWeatherMapProvider extends WeatherProvider {
     const weatherData = await response.json() as OpenWeatherMapResponse;
 
     return {
-      providerName: this.getProviderName(),
-      data: {
-        weatherOverview: weatherData.weather[0].main,
-        temperature: weatherData.main.temp,
-        humidity: weatherData.main.humidity,
-        windSpeed: weatherData.wind.speed,
-      }
+      weatherOverview: weatherData.weather[0].main,
+      temperature: weatherData.main.temp,
+      humidity: weatherData.main.humidity,
+      windSpeed: weatherData.wind.speed,
     };
   }
 
